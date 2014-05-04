@@ -4,162 +4,162 @@ import java.util.*;
 public class Neural {
 	public static Random random = new Random();
 	public static BufferedReader fileReader;
-    public static Vector<Double> inputs = new Vector<Double>(); //input vector
+    	public static Vector<Double> inputs = new Vector<Double>(); //input vector
 	public static Vector<Vector<Double>> setOfNodes = new Vector<Vector<Double>>();
 	public static int countCorrect;
-    public static int countTotal;
-    public static int trainCountCorrect;
-    public static int trainCountTotal;
-    public static int positionCounter = 0;
-    public static boolean firstRead = true;
-    public static Vector<Vector<Double>> errorVect = new Vector<Vector<Double>>();
-    public static ArrayList<String> allOutputs = new ArrayList<String>(10);
+    	public static int countTotal;
+    	public static int trainCountCorrect;
+	public static int trainCountTotal;
+	public static int positionCounter = 0;
+	public static boolean firstRead = true;
+	public static Vector<Vector<Double>> errorVect = new Vector<Vector<Double>>();
+	public static ArrayList<String> allOutputs = new ArrayList<String>(10);
 	public static void main(String args[]) {
 		String trainFilename = args[0]; //name of file to train on
-        String testFilename = args[1]; //name of file to train on
+        	String testFilename = args[1]; //name of file to train on
 		int epochs = Integer.parseInt(args[2]); //number of epochs to run
 		double learningRate = Double.parseDouble(args[3]); //learning rate
 		String inputRepresentation = args[4]; //format of input
 		int outputRepresentation = Integer.parseInt(args[5]); //format of output
 		
-        int target = 0; //initialize target
+        	int target = 0; //initialize target
 		
 		setOfNodes.setSize(outputRepresentation); //set size to number of nodes
 		if(outputRepresentation == 1) {
-            //get trained weights from one node
-            setOfNodes.setElementAt(trainNode(trainFilename, outputRepresentation, inputRepresentation, target, learningRate, epochs), 0);
-            
-            double tempError = 0;
-            double totalError = 0;
-            for (int i = 0; i < errorVect.size(); i++) {
-                for (int j = 0; j < errorVect.get(i).size(); j++) {
-                    tempError += Math.pow(errorVect.get(i).get(j), 2);
-                    
-                }
-                totalError += tempError;
-            }
-            totalError = Math.sqrt(totalError);
-            System.out.println("Training Mean Squared Error: "+totalError);
-       	}
+	            //get trained weights from one node
+	            setOfNodes.setElementAt(trainNode(trainFilename, outputRepresentation, inputRepresentation, target, learningRate, epochs), 0);
+	            
+	            double tempError = 0;
+	            double totalError = 0;
+	            for (int i = 0; i < errorVect.size(); i++) {
+	                for (int j = 0; j < errorVect.get(i).size(); j++) {
+	                    tempError += Math.pow(errorVect.get(i).get(j), 2);
+	                    
+	                }
+	                totalError += tempError;
+	            }
+	            totalError = Math.sqrt(totalError);
+	            System.out.println("Training Mean Squared Error: "+totalError);
+	       	}
         
-        else if(outputRepresentation == 4){
-            for(int g = 0; g < setOfNodes.size(); g++) { //for each (of 4) nodes
-                setOfNodes.setElementAt(trainNode(trainFilename, outputRepresentation, inputRepresentation, g, learningRate, epochs), g);
-            }
-            int tempError = 0;
-            double totalError = 0;
-            for (int i = 0; i < errorVect.size(); i++) {
-                for (int j = 0; j < errorVect.get(i).size(); j++) {
-                    tempError += Math.pow(errorVect.get(i).get(j), 2);
-                    
-                }
-                totalError += tempError;
-            }
-            totalError = Math.sqrt(totalError);
-            System.out.println("Training Mean Squared Error: "+totalError);
-        }
-        else if(outputRepresentation == 10){
-            setOfNodes.setSize(10); //create vector to hold nodes set to 10
-            for(int a = 0; a < setOfNodes.size(); a++) {
-                setOfNodes.setElementAt(trainNode(trainFilename, outputRepresentation, inputRepresentation, a, learningRate, epochs), a);
-            }
-            double tempError = 0;
-            double totalError = 0;
-            for (int i = 0; i < errorVect.size(); i++) {
-                for (int j = 0; j < errorVect.get(i).size(); j++) {
-                    tempError += Math.pow(errorVect.get(i).get(j), 2);
-                    
-                }
-                totalError += tempError;
-            }
-            totalError = Math.sqrt(totalError);
-            System.out.println("Training Mean Squared Error: "+totalError);
-        }
+	        else if(outputRepresentation == 4){
+	            for(int g = 0; g < setOfNodes.size(); g++) { //for each (of 4) nodes
+	                setOfNodes.setElementAt(trainNode(trainFilename, outputRepresentation, inputRepresentation, g, learningRate, epochs), g);
+	            }
+	            int tempError = 0;
+	            double totalError = 0;
+	            for (int i = 0; i < errorVect.size(); i++) {
+	                for (int j = 0; j < errorVect.get(i).size(); j++) {
+	                    tempError += Math.pow(errorVect.get(i).get(j), 2);
+	                    
+	                }
+	                totalError += tempError;
+	            }
+	            totalError = Math.sqrt(totalError);
+	            System.out.println("Training Mean Squared Error: "+totalError);
+	        }
+	        else if(outputRepresentation == 10){
+	            setOfNodes.setSize(10); //create vector to hold nodes set to 10
+	            for(int a = 0; a < setOfNodes.size(); a++) {
+	                setOfNodes.setElementAt(trainNode(trainFilename, outputRepresentation, inputRepresentation, a, learningRate, epochs), a);
+	            }
+	            double tempError = 0;
+	            double totalError = 0;
+	            for (int i = 0; i < errorVect.size(); i++) {
+	                for (int j = 0; j < errorVect.get(i).size(); j++) {
+	                    tempError += Math.pow(errorVect.get(i).get(j), 2);
+	                    
+	                }
+	                totalError += tempError;
+	            }
+	            totalError = Math.sqrt(totalError);
+	            System.out.println("Training Mean Squared Error: "+totalError);
+	        }
 		
 		openFile(testFilename);
         
-        test(testFilename, setOfNodes, inputRepresentation, outputRepresentation);
-        
-        closeFile();
+	        test(testFilename, setOfNodes, inputRepresentation, outputRepresentation);
+	        
+        	closeFile();
 	}
     
 	//given the file type argument, this method reads the file into a vector
 	public static int readFileIntoInputVector(String inputRepresentation) {
 		int target = 0; //target integer
-        String digitAsString = "";
+        	String digitAsString = "";
         
 		try {
-            if (inputRepresentation.equalsIgnoreCase("bmp")) {
-                String currentLine = "CurrentLine";
-                if(firstRead) {
-                    fileReader.readLine();//skip first few lines, as they are not relevant
-                    fileReader.readLine();
-                    currentLine = fileReader.readLine();
-                    firstRead = false;//only skip lines on initial entry into the file
-                }
-                if(currentLine == null) return -2;//ensures the file is being read
-                for(int i = 0; i < 32; i++) { //for each 32 rows
-                    currentLine = fileReader.readLine();
-                    if(currentLine == null) return -2;
-                    currentLine = currentLine.trim();//removes whitespace
-                    char[] inputSplitter = currentLine.toCharArray();//separates each digit into its own array element
-                    
-                    for (int j = 0; j < inputSplitter.length; j++) {
-                       inputs.addElement(new Double(Character.getNumericValue(inputSplitter[j])));//add the line to inputs
-                    }
-                }
-                currentLine = fileReader.readLine();
-                target = Character.getNumericValue(currentLine.charAt(1));//get solution into target
-            }
-            else if (inputRepresentation.equalsIgnoreCase("ndsi")) {
-                String currentLine = fileReader.readLine();
-                if(currentLine == null) return -2;//ensures file is being read
-                currentLine = currentLine.substring(2, currentLine.length()-2);//leaves out parentheses and whitespace
-                String[] inputSplitter = currentLine.split(" ");//fills array with actual values from line (they are delimited by whitespace initially)
-                for (int i = 0; i < inputSplitter.length; i++) {
-                    inputs.addElement(new Double(Double.parseDouble(inputSplitter[i])));//add the line to inputs
-                }
-                
-                currentLine = fileReader.readLine();
-                currentLine = currentLine.substring(2, currentLine.length()-2);//leaves out parentheses and whitespace
-                String[] outputSplitter = currentLine.split(" ");////fills array with actual values from line (they are delimited by whitespace initially)
-                for (int i = 0; i < outputSplitter.length; i++) {
-                    if (outputSplitter[i].equals("1.0"))
-                        target = i;//sets target to solution value for this problem
-                }
-            }
-            else if (inputRepresentation.equalsIgnoreCase("dsi")) {
-                String currentLine = fileReader.readLine();
-                if(currentLine == null) return -2;//ensures file is being read
-                String[] inputSplitter = currentLine.split(",");//file has values delimited by commas, so fill array with actual values
-                for (int i = 0; i < inputSplitter.length-1; i++) {
-                    inputs.addElement(new Double(Double.parseDouble(inputSplitter[i])/16));//effectively converts the file into an ndsi
-                }
-                target = Integer.parseInt(inputSplitter[inputSplitter.length-1]);
-            }
-            
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
+			if (inputRepresentation.equalsIgnoreCase("bmp")) {
+				String currentLine = "CurrentLine";
+				if(firstRead) {
+				    fileReader.readLine();//skip first few lines, as they are not relevant
+				    fileReader.readLine();
+				    currentLine = fileReader.readLine();
+				    firstRead = false;//only skip lines on initial entry into the file
+				}
+				if(currentLine == null) return -2;//ensures the file is being read
+				for(int i = 0; i < 32; i++) { //for each 32 rows
+				    currentLine = fileReader.readLine();
+				    if(currentLine == null) return -2;
+				    currentLine = currentLine.trim();//removes whitespace
+				    char[] inputSplitter = currentLine.toCharArray();//separates each digit into its own array element
+				    
+				    for (int j = 0; j < inputSplitter.length; j++) {
+				       inputs.addElement(new Double(Character.getNumericValue(inputSplitter[j])));//add the line to inputs
+				    }
+				}
+				currentLine = fileReader.readLine();
+				target = Character.getNumericValue(currentLine.charAt(1));//get solution into target
+			}
+			else if (inputRepresentation.equalsIgnoreCase("ndsi")) {
+				String currentLine = fileReader.readLine();
+				if(currentLine == null) return -2;//ensures file is being read
+				currentLine = currentLine.substring(2, currentLine.length()-2);//leaves out parentheses and whitespace
+				String[] inputSplitter = currentLine.split(" ");//fills array with actual values from line (they are delimited by whitespace initially)
+				for (int i = 0; i < inputSplitter.length; i++) {
+				    inputs.addElement(new Double(Double.parseDouble(inputSplitter[i])));//add the line to inputs
+				}
+				
+				currentLine = fileReader.readLine();
+				currentLine = currentLine.substring(2, currentLine.length()-2);//leaves out parentheses and whitespace
+				String[] outputSplitter = currentLine.split(" ");////fills array with actual values from line (they are delimited by whitespace initially)
+				for (int i = 0; i < outputSplitter.length; i++) {
+				    if (outputSplitter[i].equals("1.0"))
+				        target = i;//sets target to solution value for this problem
+				}
+			}
+			else if (inputRepresentation.equalsIgnoreCase("dsi")) {
+				String currentLine = fileReader.readLine();
+				if(currentLine == null) return -2;//ensures file is being read
+				String[] inputSplitter = currentLine.split(",");//file has values delimited by commas, so fill array with actual values
+				for (int i = 0; i < inputSplitter.length-1; i++) {
+				    inputs.addElement(new Double(Double.parseDouble(inputSplitter[i])/16));//effectively converts the file into an ndsi
+				}
+				target = Integer.parseInt(inputSplitter[inputSplitter.length-1]);
+			}
+
+	        } catch(IOException e) {
+	            e.printStackTrace();
+	        }
 		return target;
 	}
     
-    public static void closeFile() {
-        try {
-            if (fileReader != null)fileReader.close();
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+	public static void closeFile() {
+		try {
+		    if (fileReader != null)fileReader.close();
+		}
+		catch (IOException ex) {
+		    ex.printStackTrace();
+		}
+	}
     
 	public static void openFile(String filename) {
-        try { //try to read from file
-            fileReader = new BufferedReader(new FileReader(filename));
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
+		try { //try to read from file
+		    fileReader = new BufferedReader(new FileReader(filename));
+		} catch(IOException e) {
+		    e.printStackTrace();
+		}
+	}
     //runs activation function on weighted sum
 	public static double activation(double weightedSum) {
 		double output = 1/(1+Math.exp(((-1)*weightedSum)+0.5));
